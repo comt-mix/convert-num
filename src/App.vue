@@ -83,15 +83,17 @@ export default {
         //4(만) 3(천) 2(백) 1(십) 0("")
         let unit = units[numLen - i - 1];
 
-        // 일의 자리인 경우에는 숫자를 그대로 한글로 변환
-        if (i === numLen - 1 && digit === 1 && numLen !== 1) {
+        //1. 마지막 숫자가 1일경우
+        //2. 숫자가 1이고
+        if (i === numLen - 1 && digit === 1) {
           result += "일";
         } else if (digit !== 0) {
-          console.log(digit, unit);
-          // 일의 자리가 아니거나 숫자가 0이 아닐 경우
+          //숫자가 0이 아닐 경우
           result += digits[digit] + unit;
-        } else if (i === numLen - 5) {
-          // 십만 단위에서는 '만'을 붙이지 않습니다.
+        } else if (i === numLen - 5 && numLen < 9) {
+          //1. 십만 단위에서는 '만'을 붙이지 않도록
+          //2. 천만원 이후부터 억만 십업만 등의 단위는 존재하지 않으므로
+          // numLen < 9조건을 추가해서 천만원이 넘어가면 만을 없앴음.
           result += "만";
         }
       }
