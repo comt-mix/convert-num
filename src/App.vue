@@ -5,9 +5,9 @@
         <input
           v-model="num"
           type="text"
-          maxlength="17"
-          placeholder="최대 거래액은 1조입니다."
-          oninput="this.value = this.value.replace(/^0+|\D+/g, '').replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');"
+          maxlength="42"
+          placeholder=""
+          oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');"
         />
         <button @click="convertNum">확인</button>
         <button @click="clearNum">초기화</button>
@@ -31,7 +31,6 @@ export default {
   },
   methods: {
     convertNum() {
-      let result = "";
       const digits = [
         "영",
         "일",
@@ -56,60 +55,67 @@ export default {
         "천",
         "억",
         "십억",
-        "백억",
-        "천억",
+        "백",
+        "천",
         "조",
+        "십",
+        "백",
+        "천",
+        "경",
+        "십",
+        "백",
+        "천",
+        "해",
+        "십",
+        "백",
+        "천",
+        "자",
+        "십",
+        "백",
+        "천",
+        "양",
+        "십",
+        "백",
+        "천",
       ];
-      //comma 추가로 인해 텍스트 변환에러. 변환 전 comma빼고 변환하기.
-      let numStr = this.num.replaceAll(",", "");
-      let numLen = numStr.length;
+      //comma 추가로 인해 텍스트 변환에러. 변환 전 comma빼고 변환하기
+      let result = "";
+      const numStr = this.num.replaceAll(",", "");
+      const numLen = numStr.length;
 
       if (numLen === 0) window.alert("금액을 입력해주세요!");
 
       for (let i = 0; i < numLen; i++) {
-        //입력이 text로 string이어서 charAt을 이용한 이후 추후 숫자비교를 위해 parseInt사용.
-        //parseInt와 number의 차이점
-        //parseInt는 숫자로 된 문자열을 정수로 변환해주는 것. 그 외 값은 NaN 리턴
-        //number는 숫자로 된 문자열 전체를 변환. 그 외 값은 NaN 리턴
+        const digit = parseInt(numStr.charAt(i));
+        const unit = units[numLen - i - 1];
 
-        //for문을 이용해서 0부터 charAt에 들어감. 그럼 제일 앞인 인덱스0부터 비교해서
-        //하나씩 차례대로 숫자로 변환돼서 digit에 들어가게 됨.
-        //digit은 입력한 값에서 i번째 자릿수 숫자
-        let digit = parseInt(numStr.charAt(i));
-
-        //전체 길이에서 -1을 해야 인덱스 순서가 맞음. 거기에 i씩 더 빼주게 되면
-        //전체 길이에서 1씩 줄어들게 됨 4,3,2,1,0 이런식으로
-        //unit은 i번째 자릿수 단위를 units에서 찾아서 반환()
-        //4(만) 3(천) 2(백) 1(십) 0("")
-        let unit = units[numLen - i - 1];
+        if (numStr.charAt(i) !== 0 && numStr.charAt(i + 1) === 0) {
+          result += digits[digit];
+          console.log(11111111);
+        }
 
         //1. 마지막 숫자가 1일경우
         //2. 숫자가 1이고
         if (i === numLen - 1 && digit === 1) {
           result += "일";
         } else if (digit !== 0) {
-          //숫자가 0이 아닐 경우
           result += digits[digit] + unit;
-        } else if (i === numLen - 5 && numLen < 9) {
+        } else if (i === numLen - 5) {
           //1. 십만 단위에서는 '만'을 붙이지 않도록
           //2. 천만원 이후부터 억만 십업만 등의 단위는 존재하지 않으므로
           // numLen < 9조건을 추가해서 천만원이 넘어가면 만을 없앴음.
           result += "만";
+          //여기 고치기
         }
       }
+      //뒷자리가 0이면 단위를 끊어주기 continue
+      //뒷자리에 숫자가 오면 단위 빼기
 
       return (this.translate = result);
     },
     clearNum() {
       this.num = "";
       this.translate = "";
-    },
-  },
-  filters: {
-    comma(v) {
-      return String(v)
-        .replace(/[^0-9]/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
   },
 };
@@ -132,6 +138,7 @@ button {
   margin-right: 0.4rem;
 }
 input {
+  width: 40%;
   padding: 0.6rem;
   margin-right: 0.4rem;
   border-radius: 0.4rem;
@@ -139,9 +146,8 @@ input {
   color: #9e9e9e;
 }
 .box {
-  width: 30%;
   margin: 0 auto;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4rem;
   border-radius: 0.6rem;
 }
 .convert {
@@ -149,7 +155,7 @@ input {
   justify-content: center;
 }
 .bottom-line {
-  width: 22%;
+  width: 72%;
   border-bottom: 2px dotted #448aff;
   color: #9e9e9e;
   font-weight: bold;
