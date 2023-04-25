@@ -31,8 +31,8 @@ export default {
   },
   methods: {
     convertNum() {
-      const digits = [
-        "영",
+      const hanA = [
+        "",
         "일",
         "이",
         "삼",
@@ -42,74 +42,45 @@ export default {
         "칠",
         "팔",
         "구",
+        "십",
       ];
-      //십만부터 천만은 뒤에 계속해서 만이 붙어서 지웠음.
-      const units = [
+      const danA = [
         "",
         "십",
         "백",
         "천",
-        "만",
+        "",
         "십",
         "백",
         "천",
-        "억",
-        "십억",
-        "백",
-        "천",
-        "조",
+        "",
         "십",
         "백",
         "천",
-        "경",
-        "십",
-        "백",
-        "천",
-        "해",
-        "십",
-        "백",
-        "천",
-        "자",
-        "십",
-        "백",
-        "천",
-        "양",
+        "",
         "십",
         "백",
         "천",
       ];
-      //comma 추가로 인해 텍스트 변환에러. 변환 전 comma빼고 변환하기
-      let result = "";
       const numStr = this.num.replaceAll(",", "");
-      const numLen = numStr.length;
+      let result = "";
 
-      if (numLen === 0) window.alert("금액을 입력해주세요!");
+      for (let i = 0; i < numStr.length; i++) {
+        let str = "";
+        let han = hanA[numStr.charAt(numStr.length - (i + 1))];
 
-      for (let i = 0; i < numLen; i++) {
-        const digit = parseInt(numStr.charAt(i));
-        const unit = units[numLen - i - 1];
+        if (han !== "") str += han + danA[i];
 
-        if (numStr.charAt(i) !== 0 && numStr.charAt(i + 1) === 0) {
-          result += digits[digit];
-          console.log(11111111);
-        }
+        if (i == 4) str += "만";
+        if (i == 8) str += "억";
+        if (i == 12) str += "조";
+        if (i == 16) str += "경";
+        if (i == 20) str += "해";
+        if (i == 24) str += "자";
+        if (i == 28) str += "양";
 
-        //1. 마지막 숫자가 1일경우
-        //2. 숫자가 1이고
-        if (i === numLen - 1 && digit === 1) {
-          result += "일";
-        } else if (digit !== 0) {
-          result += digits[digit] + unit;
-        } else if (i === numLen - 5) {
-          //1. 십만 단위에서는 '만'을 붙이지 않도록
-          //2. 천만원 이후부터 억만 십업만 등의 단위는 존재하지 않으므로
-          // numLen < 9조건을 추가해서 천만원이 넘어가면 만을 없앴음.
-          result += "만";
-          //여기 고치기
-        }
+        result = str + result;
       }
-      //뒷자리가 0이면 단위를 끊어주기 continue
-      //뒷자리에 숫자가 오면 단위 빼기
 
       return (this.translate = result);
     },
@@ -118,6 +89,92 @@ export default {
       this.translate = "";
     },
   },
+  // methods: {
+  //   convertNum() {
+  //     const digits = [
+  //       "영",
+  //       "일",
+  //       "이",
+  //       "삼",
+  //       "사",
+  //       "오",
+  //       "육",
+  //       "칠",
+  //       "팔",
+  //       "구",
+  //     ];
+  //     //십만부터 천만은 뒤에 계속해서 만이 붙어서 지웠음.
+  //     const units = [
+  //       "",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "만",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "억",
+  //       "십억",
+  //       "백",
+  //       "천",
+  //       "조",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "경",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "해",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "자",
+  //       "십",
+  //       "백",
+  //       "천",
+  //       "양",
+  //       "십",
+  //       "백",
+  //       "천",
+  //     ];
+  //     //comma 추가로 인해 텍스트 변환에러. 변환 전 comma빼고 변환하기
+  //     let result = "";
+  //     const numStr = this.num.replaceAll(",", "");
+  //     const numLen = numStr.length;
+
+  //     if (numLen === 0) window.alert("금액을 입력해주세요!");
+
+  //     for (let i = 0; i < numLen; i++) {
+  //       const digit = parseInt(numStr.charAt(i));
+  //       const unit = units[numLen - i - 1];
+
+  //       if (numStr.charAt(i) !== 0 && numStr.charAt(i + 1) === 0) {
+  //         result += digits[digit];
+  //         console.log(11111111);
+  //       }
+
+  //       //1. 마지막 숫자가 1일경우
+  //       //2. 숫자가 1이고
+  //       if (i === numLen - 1 && digit === 1) {
+  //         result += "일";
+  //       } else if (digit !== 0) {
+  //         result += digits[digit] + unit;
+  //       } else if (i === numLen - 5) {
+  //         //1. 십만 단위에서는 '만'을 붙이지 않도록
+  //         //2. 천만원 이후부터 억만 십업만 등의 단위는 존재하지 않으므로
+  //         // numLen < 9조건을 추가해서 천만원이 넘어가면 만을 없앴음.
+  //         result += "만";
+  //         //여기 고치기
+  //       }
+  //     }
+  //     //뒷자리가 0이면 단위를 끊어주기 continue
+  //     //뒷자리에 숫자가 오면 단위 빼기
+
+  //     return (this.translate = result);
+  //   },
+
+  // },
 };
 </script>
 
