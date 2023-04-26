@@ -77,18 +77,9 @@ export default {
         "십",
         "백",
         "천",
-        "",
-        "십",
-        "백",
-        "천",
-        "",
-        "십",
-        "백",
-        "천",
       ];
       const tempStr = this.num.replaceAll(",", "");
       const numStr = tempStr.replace(/(^0+)/, "");
-      console.log(numStr);
 
       let result = "";
 
